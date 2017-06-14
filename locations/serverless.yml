@@ -23,9 +23,22 @@ functions:
     handler: locations/list.list
     events:
       - http:
-          path: todos
+          path: locations
           method: get
           cors: true
+
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: offline/migrations
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
 
 resources:
   Resources:
