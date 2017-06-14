@@ -26,6 +26,12 @@ Use ```npm run deploy ``` to deploy the service
 Use ```npm run deploy-function <function_name> ``` to deploy single function
 
 
+##Invoke remote function
+To invoke remote function use:
+* ```npm run invoke <function_name>```
+
+To invoke with logging use ``-l`` flag (i.e. ```npm run invoke <function_name> -l```)
+
 ## Resources
 Used plugins:
 
