@@ -13,10 +13,13 @@ module.exports.list = (event, context, callback) => {
             return;
         }
 
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(result.Items),
-        };
-        callback(null, response);
+        callback(null, createResponse(result));
     });
 };
+
+function createResponse(params) {
+    return {
+        statusCode: 200,
+        body: JSON.stringify(params.Items)
+    }
+}
