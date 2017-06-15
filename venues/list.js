@@ -1,16 +1,16 @@
 'use strict';
 
-const dynamoDb = require('./dynamodb');
+const dynamoDb = require('./../dynamodb');
 const params = {
   TableName: process.env.DYNAMODB_TABLE,
 };
 
 module.exports.list = (event, context, callback) => {
-  console.log('getting all locations]');
+  console.log('getting all venues]');
   dynamoDb.scan(params, (error, result) => {
     if (error) {
       console.error(error);
-      callback(new Error('Couldn\'t fetch the locations.'));
+      callback(new Error('Couldn\'t fetch the venues.'));
       return;
     }
 

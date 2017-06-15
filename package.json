@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Serverless CRUD service exposing a REST HTTP interface",
   "scripts": {
-    "start-local": "sls offline start",
+    "start": "sls offline start",
     "invoke": "sls invoke -f",
     "deploy": "serverless deploy",
     "deploy-function": "serverless deploy function --function"

@@ -6,7 +6,7 @@ provider:
   name: aws
   runtime: nodejs4.3
   environment:
-    DYNAMODB_TABLE: locations
+    DYNAMODB_TABLE: venues
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,10 +20,10 @@ provider:
 
 functions:
   list:
-    handler: locations/list.list
+    handler: venues/list.list
     events:
       - http:
-          path: locations
+          path: venues
           method: get
           cors: true
 
@@ -34,7 +34,7 @@ custom:
       inMemory: true
       migrate: true
     migration:
-      dir: offline/migrations
+      dir: migrations
 
 plugins:
   - serverless-dynamodb-local

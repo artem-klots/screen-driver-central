@@ -1,6 +1,6 @@
 {
     "Table": {
-        "TableName": "locations",
+        "TableName": "venues",
         "KeySchema": [
             {
                 "AttributeName": "id",
