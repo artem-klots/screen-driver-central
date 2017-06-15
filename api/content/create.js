@@ -7,7 +7,8 @@ const responseHelper = require('../helpers/http_response_helper');
 
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
-    createContent(data)
+    performValidation(data)
+        .then(() => createContent(data))
         .then(response => callback(null, responseHelper.createSuccessfulResponse(response)))
         .fail(error => callback(null, responseHelper.createResponseWithError(500, error)));
 };
@@ -25,11 +26,8 @@ function performValidation(content) {
 }
 
 function createContent(content) {
-    return performValidation(content)
-        .then(() => {
-            let params = initParamsForCreation(content);
-            return performPut(params);
-        });
+    let params = initParamsForCreation(content);
+    return performPut(params);
 }
 
 function initParamsForCreation(content) {
