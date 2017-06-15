@@ -2,14 +2,14 @@
 
 const uuid = require('uuid');
 const Q = require('q');
-
 const dynamoDb = require('../dynamodb');
+const responseHelper = require('../helpers/http_response_helper');
 
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
     createContent(data)
-        .then(response => callback(null, createSuccessfulResponse(response)))
-        .fail(error => callback(null, createResponseWithError(500, error)));
+        .then(response => callback(null, responseHelper.createSuccessfulResponse(response)))
+        .fail(error => callback(null, responseHelper.createResponseWithError(500, error)));
 };
 
 function performValidation(content) {
@@ -52,18 +52,4 @@ function performPut(params) {
         deferred.resolve(params.Item);
     });
     return deferred.promise;
-}
-
-function createSuccessfulResponse(params) {
-    return {
-        statusCode: 200,
-        body: JSON.stringify(params)
-    }
-}
-
-function createResponseWithError(statusCode, error) {
-    return {
-        statusCode: statusCode,
-        body: JSON.stringify(error)
-    }
 }
