@@ -46,6 +46,14 @@ functions:
           method: get
           cors: true
 
+  create_content:
+    handler: content/create.create
+    events:
+      - http:
+          path: content
+          method: post
+          cors: true
+
 custom:
   dynamodb:
     start:
