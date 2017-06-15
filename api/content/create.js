@@ -1,28 +1,35 @@
 'use strict';
 
 const uuid = require('uuid');
+const Q = require('q');
 
 const dynamoDb = require('../dynamodb');
 
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
-    validateContent(data);
-    createContent(data, callback);
+    createContent(data)
+        .then(response => callback(null, createSuccessfulResponse(response)))
+        .fail(error => callback(null, createResponseWithError(500, error)));
 };
 
-function validateContent(content) {
+function performValidation(content) {
+    let deferred = Q.defer();
     if (!content.short_name || !content.url) {
-        throw new Error('Content object should contain short_name and url fields');
+        deferred.reject('Content object should contain short_name and url fields');
     }
-
     if (typeof content.short_name !== 'string' || typeof content.url !== 'string') {
-        throw new Error('short_name and url fields should be a string');
+        deferred.reject('short_name and url fields should be a string');
     }
+    deferred.resolve();
+    return deferred.promise;
 }
 
-function createContent(content, callback) {
-    let params = initParamsForCreation(content);
-    performPut(params, callback);
+function createContent(content) {
+    return performValidation(content)
+        .then(() => {
+            let params = initParamsForCreation(content);
+            return performPut(params);
+        });
 }
 
 function initParamsForCreation(content) {
@@ -36,21 +43,27 @@ function initParamsForCreation(content) {
     }
 }
 
-function performPut(params, callback) {
-    dynamoDb.put(params, (error) => {
+function performPut(params) {
+    let deferred = Q.defer();
+    dynamoDb.put(params, error => {
         if (error) {
-            console.error(error);
-            callback(new Error('Couldn\'t create the content.'));
-            return;
+            deferred.reject('Couldn\'t create the content.');
         }
-
-        callback(null, createResponse(params));
+        deferred.resolve(params.Item);
     });
+    return deferred.promise;
 }
 
-function createResponse(params) {
+function createSuccessfulResponse(params) {
     return {
         statusCode: 200,
-        body: JSON.stringify(params.Item)
+        body: JSON.stringify(params)
+    }
+}
+
+function createResponseWithError(statusCode, error) {
+    return {
+        statusCode: statusCode,
+        body: JSON.stringify(error)
     }
 }
