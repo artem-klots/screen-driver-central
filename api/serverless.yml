@@ -38,6 +38,14 @@ functions:
           method: get
           cors: true
 
+  content_list:
+    handler: content/list.list
+    events:
+      - http:
+          path: content
+          method: get
+          cors: true
+
 custom:
   dynamodb:
     start:
