@@ -8,6 +8,7 @@ const responseHelper = require('../helpers/http_response_helper');
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
     performValidation(data)
+        .then(() => checkExisting(data))
         .then(() => createContent(data))
         .then(response => callback(null, responseHelper.createSuccessfulResponse(response)))
         .fail(error => callback(null, responseHelper.createResponseWithError(500, error)));
@@ -22,6 +23,27 @@ function performValidation(content) {
         deferred.reject('short_name and url fields should be a string');
     }
     deferred.resolve();
+    return deferred.promise;
+}
+
+function checkExisting(content) {
+    let deferred = Q.defer();
+    getAllExistingShortNames().then((shortNames) => {
+        if (shortNames.includes(content.short_name)) {
+            deferred.reject('Content with such name already exists');
+        }
+        deferred.resolve();
+    });
+    return deferred.promise;
+}
+
+function getAllExistingShortNames() {
+    let deferred = Q.defer();
+    let params = {TableName: process.env.CONTENT_TABLE};
+    dynamoDb.scan(params, (error, data) => {
+        let shortNames = data.Items.map((content) => content.short_name);
+        deferred.resolve(shortNames);
+    });
     return deferred.promise;
 }
 
