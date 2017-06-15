@@ -53,7 +53,7 @@ plugins:
 
 resources:
   Resources:
-    LocationsTable:
+    ContentTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
@@ -69,17 +69,17 @@ resources:
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTENT_TABLE}
     VenuesTable:
-          Type: 'AWS::DynamoDB::Table'
-          Properties:
-            AttributeDefinitions:
-              -
-                AttributeName: id
-                AttributeType: S
-            KeySchema:
-              -
-                AttributeName: id
-                KeyType: HASH
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-            TableName: ${self:provider.environment.VENUES_TABLE}
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.VENUES_TABLE}
