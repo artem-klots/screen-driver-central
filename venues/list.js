@@ -2,7 +2,7 @@
 
 const dynamoDb = require('./../dynamodb');
 const params = {
-  TableName: process.env.DYNAMODB_TABLE,
+  TableName: process.env.VENUES_TABLE,
 };
 
 module.exports.list = (event, context, callback) => {
