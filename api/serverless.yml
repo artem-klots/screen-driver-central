@@ -69,6 +69,14 @@ functions:
           method: put
           cors: true
 
+  delete_content:
+    handler: content/delete.delete
+    events:
+      - http:
+          path: content/{id}
+          method: delete
+          cors: true
+
 custom:
   dynamodb:
     start:
