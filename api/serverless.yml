@@ -41,7 +41,7 @@ functions:
     handler: venues/create.create
     events:
       - http:
-          path: venues/create
+          path: venues
           method: post
           cors: true
 
