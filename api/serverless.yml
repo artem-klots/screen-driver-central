@@ -30,12 +30,19 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}"
 
 functions:
-  list:
+  venues_list:
     handler: venues/list.list
     events:
       - http:
           path: venues
           method: get
+          cors: true
+  createVenue:
+    handler: venues/create.create
+    events:
+      - http:
+          path: venues/create
+          method: post
           cors: true
 
   content_list:
