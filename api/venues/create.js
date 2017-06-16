@@ -1,5 +1,5 @@
 'use strict';
-let Venue = require('./../entities/venue');
+let Venue = require('././venue');
 
 const dynamodb = require('./../dynamodb');
 const tableName = process.env.VENUES_TABLE;
