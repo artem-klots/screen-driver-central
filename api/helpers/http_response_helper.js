@@ -1,7 +1,7 @@
 module.exports.createSuccessfulResponse = (params) => {
     return {
         statusCode: 200,
-        body: JSON.stringify(params)
+        body: params
     }
 };
 
