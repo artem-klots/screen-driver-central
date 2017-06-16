@@ -55,8 +55,7 @@ function createVenue(venue, callback) {
 
     dynamodb.put(params, (error) => {
         if (error) {
-            console.error(error);
-            callback(new Error('Couldn\'t create the item.'));
+            callback(null, responseHelper.createResponseWithError(500, 'Couldn\'t create the item. ' + error.message));
             return;
         }
 

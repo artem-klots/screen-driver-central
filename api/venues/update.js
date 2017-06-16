@@ -12,11 +12,6 @@ module.exports.update = (event, context, callback) => {
     data.id = event.pathParameters.id;
     let venue = new Venue(data);
 
-    if (!venue.id) {
-        callback(null, responseHelper.createResponseWithError(500, 'Missed id'));
-        return;
-    }
-
     if (!venue._rev && data._rev !== 0) {
         callback(null, responseHelper.createResponseWithError(500, 'Missed revision number'));
         return;
