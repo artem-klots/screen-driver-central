@@ -37,12 +37,29 @@ functions:
           path: venues
           method: get
           cors: true
-  createVenue:
+
+  create_venue:
     handler: venues/create.create
     events:
       - http:
           path: venues
           method: post
+          cors: true
+
+  update_venue:
+    handler: venues/update.update
+    events:
+      - http:
+          path: venues/{id}
+          method: put
+          cors: true
+
+  delete_venue:
+    handler: venues/delete.delete
+    events:
+      - http:
+          path: venues
+          method: delete/{id}
           cors: true
 
   content_list:
