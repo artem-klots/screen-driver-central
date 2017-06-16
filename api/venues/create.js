@@ -27,7 +27,7 @@ module.exports.create = (event, context, callback) => {
 //TODO: get rid of code duplication
 function checkExisting(venue) {
   let deferred = Q.defer();
-  getAllExistingShortNames().then((names) => {
+  getAllExistingNames().then((names) => {
     if (names.includes(venue.name)) {
       deferred.reject('Venue with such name already exists');
     }
@@ -37,7 +37,7 @@ function checkExisting(venue) {
 }
 
 //TODO: get rid of code duplication
-function getAllExistingShortNames() {
+function getAllExistingNames() {
   let deferred = Q.defer();
   let params = {TableName: process.env.VENUES_TABLE};
   dynamodb.scan(params, (error, data) => {
