@@ -61,6 +61,14 @@ functions:
           method: post
           cors: true
 
+  update_content:
+    handler: content/update.update
+    events:
+      - http:
+          path: content/{id}
+          method: put
+          cors: true
+
 custom:
   dynamodb:
     start:
