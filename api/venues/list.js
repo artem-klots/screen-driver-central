@@ -6,7 +6,6 @@ const params = {
 };
 
 module.exports.list = (event, context, callback) => {
-  console.log('getting all venues]');
   dynamoDb.scan(params, (error, result) => {
     if (error) {
       console.error(error);
