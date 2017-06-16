@@ -1,7 +1,10 @@
 'use strict';
 let Venue = require('./../entities/venue');
 
-const dynamodb = require('./../dynamodb');
+const dynamodb = require('../dynamodb');
+const Q = require('q');
+const responseHelper = require('../helpers/http_response_helper');
+
 const tableName = process.env.VENUES_TABLE;
 
 module.exports.create = (event, context, callback) => {
@@ -9,8 +12,42 @@ module.exports.create = (event, context, callback) => {
 
   let venue = new Venue(data);
   venue.generateId();
-  venue.validate();
+  try {
+    venue.validate();
+  } catch (error) {
+    callback(null, responseHelper.createResponseWithError(500, error.message));
+    return
+  }
 
+  checkExisting(venue)
+      .then(() => createVenue(venue, callback))
+      .fail(error => callback(null, responseHelper.createResponseWithError(500, error)));
+};
+
+//TODO: get rid of code duplication
+function checkExisting(venue) {
+  let deferred = Q.defer();
+  getAllExistingShortNames().then((names) => {
+    if (names.includes(venue.name)) {
+      deferred.reject('Venue with such name already exists');
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+
+//TODO: get rid of code duplication
+function getAllExistingShortNames() {
+  let deferred = Q.defer();
+  let params = {TableName: process.env.VENUES_TABLE};
+  dynamodb.scan(params, (error, data) => {
+    let names = data.Items.map((venue) => venue.name);
+    deferred.resolve(names);
+  });
+  return deferred.promise;
+}
+
+function createVenue(venue, callback) {
   const params = {
     TableName: tableName,
     Item: venue,
@@ -23,10 +60,7 @@ module.exports.create = (event, context, callback) => {
       return;
     }
 
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(params.Item),
-    };
+    let response = responseHelper.createSuccessfulResponse(params.Item);
     callback(null, response);
   });
 };
