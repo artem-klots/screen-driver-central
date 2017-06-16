@@ -4,6 +4,7 @@ const uuid = require('uuid');
 const Q = require('q');
 const dynamoDb = require('../dynamodb');
 const responseHelper = require('../helpers/http_response_helper');
+const validator = require('./content_validator');
 
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
@@ -15,15 +16,7 @@ module.exports.create = (event, context, callback) => {
 };
 
 function performValidation(content) {
-    let deferred = Q.defer();
-    if (!content.short_name || !content.url) {
-        deferred.reject('Content object should contain short_name and url fields');
-    }
-    if (typeof content.short_name !== 'string' || typeof content.url !== 'string') {
-        deferred.reject('short_name and url fields should be a string');
-    }
-    deferred.resolve();
-    return deferred.promise;
+    return validator.validate(content);
 }
 
 function checkExisting(content) {
@@ -67,7 +60,7 @@ function performPut(params) {
     let deferred = Q.defer();
     dynamoDb.put(params, error => {
         if (error) {
-            deferred.reject('Couldn\'t create the content.');
+            deferred.reject(`Couldn\'t create the content: ${error.message}`);
         }
         deferred.resolve(params.Item);
     });
