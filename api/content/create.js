@@ -60,7 +60,7 @@ function performPut(params) {
     let deferred = Q.defer();
     dynamoDb.put(params, error => {
         if (error) {
-            deferred.reject('Couldn\'t create the content.');
+            deferred.reject(`Couldn\'t create the content: ${error.message}`);
         }
         deferred.resolve(params.Item);
     });

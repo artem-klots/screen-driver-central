@@ -73,7 +73,7 @@ function performUpdate(params) {
     let deferred = Q.defer();
     dynamoDb.update(params, (error, data) => {
         if (error) {
-            deferred.reject('Couldn\'t update the content.');
+            deferred.reject(`Couldn\'t update the content: ${error.message}`);
         }
         deferred.resolve(data ? data.Attributes : {});
     });

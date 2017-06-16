@@ -10,7 +10,7 @@ const params = {
 module.exports.list = (event, context, callback) => {
     dynamoDb.scan(params, (error, result) => {
         if (error) {
-            callback(null, responseHelper.createResponseWithError(500, 'Couldn\'t fetch the content.'));
+            callback(null, responseHelper.createResponseWithError(500, `Couldn\'t fetch the content: ${error.message}`));
             return;
         }
 

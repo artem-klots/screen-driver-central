@@ -29,7 +29,7 @@ function performDelete(params) {
     let deferred = Q.defer();
     dynamoDb.delete(params, (error, data) => {
         if (error) {
-            deferred.reject('Couldn\'t delete the content.');
+            deferred.reject(`Couldn\'t delete the content: ${error.message}`);
         }
         deferred.resolve();
     });
