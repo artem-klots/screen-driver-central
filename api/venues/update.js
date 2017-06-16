@@ -5,7 +5,7 @@ let Venue = require('./../entities/venue');
 const dynamodb = require('../dynamodb');
 const responseHelper = require('../helpers/http_response_helper');
 
-const tableName = process.env.VENUES_TABLE;
+const venuesTableName = process.env.VENUES_TABLE;
 
 module.exports.update = (event, context, callback) => {
     const data = JSON.parse(event.body);
@@ -27,7 +27,7 @@ module.exports.update = (event, context, callback) => {
 
 function getRequestParameters(venue) {
     return {
-        TableName: tableName,
+        TableName: venuesTableName,
         Key: {
             id: venue.id,
         },

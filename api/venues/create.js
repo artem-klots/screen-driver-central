@@ -5,7 +5,7 @@ const dynamodb = require('../dynamodb');
 const Q = require('q');
 const responseHelper = require('../helpers/http_response_helper');
 
-const tableName = process.env.VENUES_TABLE;
+const venuesTableName = process.env.VENUES_TABLE;
 
 module.exports.create = (event, context, callback) => {
   const data = JSON.parse(event.body);
@@ -49,7 +49,7 @@ function getAllExistingShortNames() {
 
 function createVenue(venue, callback) {
   const params = {
-    TableName: tableName,
+    TableName: venuesTableName,
     Item: venue,
   };
 

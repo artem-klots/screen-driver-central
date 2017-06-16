@@ -54,6 +54,14 @@ functions:
           method: put
           cors: true
 
+  delete_venue:
+    handler: venues/delete.delete
+    events:
+      - http:
+          path: venues
+          method: delete
+          cors: true
+
   content_list:
     handler: content/list.list
     events:
