@@ -3,6 +3,7 @@
 const Q = require('q');
 const dynamoDb = require('../dynamodb');
 const responseHelper = require('../helpers/http_response_helper');
+const validator = require('./content_validator');
 
 module.exports.update = (event, context, callback) => {
     let data = JSON.parse(event.body);
@@ -15,15 +16,7 @@ module.exports.update = (event, context, callback) => {
 };
 
 function performValidation(content) {
-    let deferred = Q.defer();
-    if (!content.short_name || !content.url) {
-        deferred.reject('Content object should contain short_name and url fields');
-    }
-    if (typeof content.short_name !== 'string' || typeof content.url !== 'string') {
-        deferred.reject('short_name and url fields should be a string');
-    }
-    deferred.resolve();
-    return deferred.promise;
+    return validator.validate(content);
 }
 
 function checkExisting(contentForUpdate) {
