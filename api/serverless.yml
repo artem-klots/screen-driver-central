@@ -58,8 +58,8 @@ functions:
     handler: venues/delete.delete
     events:
       - http:
-          path: venues
-          method: delete/{id}
+          path: venues/{id}
+          method: delete
           cors: true
 
   content_list:
