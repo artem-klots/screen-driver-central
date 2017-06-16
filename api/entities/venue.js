@@ -6,7 +6,7 @@ var Venue = function (venue) {
         this.name = venue.name;
         this.content_id = venue.content_id ? venue.content_id : null;
         this.screen_groups = venue.screen_groups ? venue.screen_groups : [];
-        this._rev = !!venue._rev ? venue._rev : 0;
+        this._rev = venue._rev ? venue._rev : 0;
         return;
     }
     this.content_id = null;

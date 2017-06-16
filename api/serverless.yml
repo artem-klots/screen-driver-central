@@ -50,7 +50,7 @@ functions:
     handler: venues/update.update
     events:
       - http:
-          path: venues
+          path: venues/{id}
           method: put
           cors: true
 
@@ -59,7 +59,7 @@ functions:
     events:
       - http:
           path: venues
-          method: delete
+          method: delete/{id}
           cors: true
 
   content_list:

@@ -6,7 +6,8 @@ const responseHelper = require('../helpers/http_response_helper');
 const venuesTableName = process.env.VENUES_TABLE;
 
 module.exports.delete = (event, context, callback) => {
-    const data = JSON.parse(event.body);
+    let data = JSON.parse(event.body);
+    data.id = event.pathParameters.id;
     let params = getRequestParameters(data.id);
 
     deleteVenue(params, callback);

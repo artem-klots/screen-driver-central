@@ -9,6 +9,7 @@ const venuesTableName = process.env.VENUES_TABLE;
 
 module.exports.update = (event, context, callback) => {
     const data = JSON.parse(event.body);
+    data.id = event.pathParameters.id;
     let venue = new Venue(data);
 
     if (!venue.id) {
