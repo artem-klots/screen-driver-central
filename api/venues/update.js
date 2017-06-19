@@ -1,8 +1,10 @@
 'use strict';
 
 let Venue = require('./../entities/venue');
+let ScreenGroup = require('./../entities/screen_group');
 
 const dynamodb = require('../dynamodb');
+const Q = require('q');
 const responseHelper = require('../helpers/http_response_helper');
 
 const venuesTableName = process.env.VENUES_TABLE;
@@ -18,7 +20,14 @@ module.exports.update = (event, context, callback) => {
     }
 
     var params = getRequestParameters(venue);
-    update(params, callback);
+    checkUniquenessOfName(venue)
+        // .then(() => validateGroups(venue.screen_groups))
+        // .then(() => validateScreens(venue.screen_groups))
+        .then(() => update(params, callback))
+        .fail(error => {
+            let message = error.message ? error.message : error;
+            callback(null, responseHelper.createResponseWithError(500, message));
+        });
 };
 
 function getRequestParameters(venue) {
@@ -43,6 +52,30 @@ function getRequestParameters(venue) {
         ReturnValues: 'ALL_NEW',
     };
 }
+
+function checkUniquenessOfName(venue) {
+    let deferred = Q.defer();
+    getAllExistingNamesBesidesCurrent(venue).then((names) => {
+        if (names.includes(venue.name)) {
+            deferred.reject('Venue with such name already exists');
+        }
+        deferred.resolve();
+    });
+    return deferred.promise;
+}
+
+function getAllExistingNamesBesidesCurrent(venue) {
+    let deferred = Q.defer();
+    let params = {TableName: venuesTableName};
+    dynamodb.scan(params, (error, data) => {
+        let names = data.Items
+            .filter(item => item.id !== venue.id)
+            .map((venue) => venue.name);
+        deferred.resolve(names);
+    });
+    return deferred.promise;
+}
+
 
 function update(params, callback) {
     dynamodb.update(params, (error, result) => {
