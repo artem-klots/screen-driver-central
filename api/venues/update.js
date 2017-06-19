@@ -19,10 +19,15 @@ module.exports.update = (event, context, callback) => {
         return;
     }
 
+    try {
+        venue.validate();
+    } catch (error) {
+        callback(null, responseHelper.createResponseWithError(500, error.message));
+        return;
+    }
+
     var params = getRequestParameters(venue);
-    checkUniquenessOfName(venue)
-        // .then(() => validateGroups(venue.screen_groups))
-        // .then(() => validateScreens(venue.screen_groups))
+    checkUniquenessOfVenueName(venue)
         .then(() => update(params, callback))
         .fail(error => {
             let message = error.message ? error.message : error;
@@ -53,7 +58,7 @@ function getRequestParameters(venue) {
     };
 }
 
-function checkUniquenessOfName(venue) {
+function checkUniquenessOfVenueName(venue) {
     let deferred = Q.defer();
     getAllExistingNamesBesidesCurrent(venue).then((names) => {
         if (names.includes(venue.name)) {
