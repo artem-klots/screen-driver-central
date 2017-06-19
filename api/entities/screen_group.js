@@ -16,6 +16,20 @@ class ScreenGroup {
 
     validate() {
         if (!this.name || this.name == '') throw new Error('Group can\'t be without name');
+
+        this.screens.forEach(screen => {
+            validateScreenNamesUniqueness(this.screens, screen);
+        });
+
+        function validateScreenNamesUniqueness(allScreeens, screen) {
+            let matches = 0;
+            allScreeens.forEach(element => {
+                if (screen.name == element.name) matches++;
+            });
+            if (matches > 1) {
+                throw new Error('Screens should have unique names');
+            }
+        }
     };
 
     generateId() {

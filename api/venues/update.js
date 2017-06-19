@@ -1,7 +1,6 @@
 'use strict';
 
 let Venue = require('./../entities/venue');
-let ScreenGroup = require('./../entities/screen_group');
 
 const dynamodb = require('../dynamodb');
 const Q = require('q');
